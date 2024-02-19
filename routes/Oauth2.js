@@ -28,7 +28,7 @@ router.get('/auth/google/callback',
   function(req, res) {
     const newUser = req.newUser || {};
     const token =jwt.sign(newUser,JWTKey);
-
-     res.redirect('/username');
+    // res.json({token:token});
+    res.redirect('/username');
   });
 module.exports=router;

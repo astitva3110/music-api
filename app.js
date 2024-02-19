@@ -11,6 +11,8 @@ require('dotenv').config();
 const Oauth=require('./routes/Oauth2')
 const username=require('./routes/user');
 const musik=require('./routes/musik');
+const adminroute=require('./routes/adminroutes');
+const artistroute=require('./routes/artist');
 const connectdb=require('./util/database')
 const app =express();
 
@@ -36,8 +38,11 @@ app.use(session({
  app.use(passport.initialize());
  app.use(passport.session());
 app.use(Oauth);
+app.use(artistroute);
 app.use(username);
 app.use(musik);
+app.use(adminroute);
+
 
 app.get('/', (req,res)=>{
     res.render('home');

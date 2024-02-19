@@ -5,6 +5,10 @@ const Track=require('../model/song');
 const connectdb = require('../util/database');
 connectdb();
 
+
+exports.view_music=(req,res)=>{
+    res.render('musik')
+}
 exports.playmusic=async(req,res,next)=>{
     try{
   const{musicId}=req.params.id;

@@ -1,9 +1,8 @@
 const passport=require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('dotenv').config();
-const User=require('./user');
 const connectdb=require('../util/database');
-
+const User=require('./user');
 connectdb();
 console.log("connteced to ")
 passport.use(new GoogleStrategy({

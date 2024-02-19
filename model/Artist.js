@@ -1,18 +1,25 @@
-const mongoose=require('mongooose');
-const { Schema } = require('mongoose');
+const mongoose=require('mongoose');
+
 
 const ArtistSchema=new mongoose.Schema({
     name:{
         type:String,
         required:true, 
     },
-    albums:[{
-        type:mongoose.Schema.ObjectId,
-        ref:"Album"
-    }],
-    img:{
+    songName:{
+        type:String
+    },
+    // albums:[{
+    //     type:mongoose.Schema.ObjectId,
+    //     ref:"Album"
+    // }],
+    imgUrl:{
        type:String,
-    } 
+    } ,
+    audioUrl:{
+        type:String,
+    }
+
 });
 
 ArtistSchema.methods.addAlbum=function(album) {
@@ -20,5 +27,5 @@ ArtistSchema.methods.addAlbum=function(album) {
     return this.save();
 };
 
-const artist=mongoose.model("artist",ArtistSchema)
-module.export=artist;
+const Artist=mongoose.model("Artist",ArtistSchema)
+module.exports=Artist;
