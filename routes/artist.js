@@ -1,47 +1,44 @@
-
 const express = require('express');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
+const fileupload = require('express-fileupload');
 const Artist = require('../model/Artist');
 require('dotenv').config();
 
 const router = express.Router();
 
 cloudinary.config({
-  cloud_name: process.env.cloud_name ,
-  api_key: process.env.api_key ,
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.api_key,
   api_secret: process.env.api_secret
 });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+router.use(fileupload({
+  useTempFiles: true
+}));
 
-router.post('/upload', upload.fields([{ name: 'image', maxCount: 1 }, { name: 'audio', maxCount: 1 }]), async (req, res) => {
-    try {
-      const { name, songName } = req.body;
-      const imageBuffer = req.files['image'][0].buffer;
-      const audioBuffer = req.files['audio'][0].buffer;
-      const imageUploadResult = await cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-        if (error) throw error;
-        return result;
-      }).end(imageBuffer.toString('base64'));
-  
-      const audioUploadResult = await cloudinary.uploader.upload_stream({ resource_type: 'raw' }, (error, result) => {
-        if (error) throw error;
-        return result;
-      }).end(audioBuffer.toString('base64')); 
-      const newArtist = new Artist({
-        name: name,
-        songName: songName,
-        imageUrl: imageUploadResult.secure_url,
-        audioUrl: audioUploadResult.secure_url
-      });  
-   await newArtist.save();
-      res.redirect('/musik')
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  });
+router.post('/upload', async (req, res) => {
+  try {
+    const imageFile = req.files.image;
+    const imageResult = await cloudinary.uploader.upload(imageFile.tempFilePath);
+    
+    const audioFile = req.files.audio;
+    const audioResult = await cloudinary.uploader.upload(audioFile.tempFilePath, { resource_type: 'video' });
+
+    const newartist = new Artist({
+      name: req.body.name,
+      songName: req.body.songName,
+      imageUrl: imageResult.secure_url,
+      audioUrl: audioResult.secure_url,
+    });
+
+    await newartist.save();
+    res.redirect("/musik")
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 module.exports = router;

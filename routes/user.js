@@ -7,7 +7,7 @@ const auth=require('../middleware/auth');
 router.get("/username",(req,res)=>{
     res.render('username');
 });
-router.get("/artist",(req,res)=>{
+router.get("/upload",(req,res)=>{
     res.render('artist');
 })
 // router.post('/artist',usercontrol.addsong);

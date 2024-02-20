@@ -13,11 +13,13 @@ const ArtistSchema=new mongoose.Schema({
     //     type:mongoose.Schema.ObjectId,
     //     ref:"Album"
     // }],
-    imgUrl:{
+    imageUrl:{
        type:String,
+       required:true
     } ,
     audioUrl:{
         type:String,
+        // required:true
     }
 
 });
