@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 
-const Playlistschema=new mongoose.Schema({
+
+const Albumschema=new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
@@ -22,6 +23,6 @@ const Playlistschema=new mongoose.Schema({
 
 },{timestamps:true})
 
-const Playlist=mongoose.model('Playlist',Playlistschema);
+const Album=mongoose.model('Album',Albumschema);
 
-module.exports=Playlist;
+module.exports=Album;

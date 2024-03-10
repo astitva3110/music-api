@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { validate } = require('../model/song');
+const { validate } = require('../model/Song');
 require('dotenv').config();
 
 module.exports = (req, res, next) => {
@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
     const token = req.headers.authorization; 
 
     if (!token) {
-        return res.status(401).send({ message: "Access is denied, no token is provided" });
+        return res.status(401).send({ message: "Access is denied, no token " });
     }
 
     jwt.verify(token, process.env.JWTKey, (err, validToken) => {

@@ -20,17 +20,17 @@ router.use(fileupload({
 
 router.post('/upload', async (req, res) => {
   try {
-    const imageFile = req.files.image;
-    const imageResult = await cloudinary.uploader.upload(imageFile.tempFilePath);
+const imageFile = req.files.image;
+const imageResult = await cloudinary.uploader.upload(imageFile.tempFilePath);
     
-    const audioFile = req.files.audio;
-    const audioResult = await cloudinary.uploader.upload(audioFile.tempFilePath, { resource_type: 'video' });
+const audioFile = req.files.audio;
+const audioResult = await cloudinary.uploader.upload(audioFile.tempFilePath, { resource_type: 'video' });
 
-    const newartist = new Artist({
-      name: req.body.name,
-      songName: req.body.songName,
-      imageUrl: imageResult.secure_url,
-      audioUrl: audioResult.secure_url,
+const newartist = new Artist({
+  name: req.body.name,
+  songName: req.body.songName,
+  imageUrl: imageResult.secure_url,
+  audioUrl: audioResult.secure_url,
     });
 
     await newartist.save();
