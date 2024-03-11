@@ -13,3 +13,4 @@ const isArtist=async(req,res,next)=>{
     }
     next();
 }
+module.exports=isArtist;

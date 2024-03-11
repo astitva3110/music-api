@@ -16,7 +16,10 @@ password:{
     type:String,
     required:true
 },
-
+appname:{
+    type:String,
+    default:""
+},
 likedSong:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:'likedSong'
@@ -26,6 +29,10 @@ Playlist:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:'Playlist'
 }],
+isArtist:{
+    type:Boolean,
+    default:false
+}
 },{timestamps:true})
 
 

@@ -4,18 +4,17 @@ const User=require('../model/user');
 const Playlist=require('../model/playlist');
 const Song=require('../model/Song');
 const Artist=require('../model/Artist');
-const User=require('../model/user');
 const connectdb = require('../util/database');
 connectdb();
 
 exports.getuser=async(req,res)=>{
-    const userId=req.params;
+    const userId=req.params.user_id;
     try{
       const user=await User.findById(userId);
       if(!user){
         res.status(404).json({message:'User is not found'});
       }
-      res.status(200).json({message:"User is found "})
+      res.status(200).json({message:"User is found ",user:user})
     }
     catch(err){
       console.error(err);
@@ -39,9 +38,10 @@ exports.updateUserData=async(req,res)=>{
    }
 } 
 
+// //creating a playlist
 exports.createPlaylist=async(req,res)=>{
  const {text}=req.body; 
- const userId=req.params;
+ const userId=req.params.user_id;
  try{
  const user=await User.findById(userId);
  
@@ -51,7 +51,9 @@ exports.createPlaylist=async(req,res)=>{
  })
 
  await newPlaylist.save();
- await user.Playlist.push(newPlaylist._id)
+ user.Playlist.push(newPlaylist._id)
+ 
+ await user.save();
 
  res.status(200).json({message:"User playlist is created",Playlist:newPlaylist});
  }
@@ -61,49 +63,80 @@ exports.createPlaylist=async(req,res)=>{
            }
 }
 
-// exports.getUnfollow=async(req,res)=>{
-//     res.status(200).json("user on the page to unfollow")
-// }
+// //liked song
+exports.LikedSong=async(req,res)=>{
+  const userId=req.body.user_id; 
+  const songId=req.params.song_id;
+  try{
+  const user=await User.findById(userId);
+  const song=await Song.findById(songId);
+  console.log(song,user);
 
-// exports.postUnfollow = async (req, res) => {
-//     const currentUser = req.params.user_id;
-//     const { _id } = req.body;
 
-//     try {
-//         if (currentUser === _id) {
-//             return res.status(500).json({ message: "User can't follow itself" });
-//         }
+  if(!song){
+    res.status(404).json({message:"Song id not found"});
+  }
+   user.likedSong.push(song._id);
+   await user.save();
+   res.status(200).json({message:"song is liked"});
+  
+  }
+   catch(err){
+             console.error(err);
+             res.status(500).json({message:"internal Server Error"});
+            }
+ }
 
-//         const unfollow = await User.findById(currentUser);
-//         const user = await User.findById(_id);
+//  //UNliked song
+exports.unLikedSong=async(req,res)=>{
+  const userId=req.body.user_id; 
+  const songId=req.params.song_id;
+  try{
+  const user=await User.findById(userId);
+  const song=await Song.findById(songId);
 
-//         if (!user || !unfollow) {
-//             return res.status(404).json({ message: "User not found" });
-//         }
 
-//         if (!user.following.includes(currentUser)) {
-//             return res.status(500).json({ message: "User is not present" });
-//         }
+  if(!song){
+    res.status(404).json({message:"Song id not found"});
+  }
+  if(!user.likedSong.includes(songId)){
+    res.status(500).json({message:"the is not liked"});
+  }
+   user.likedSong.pull(song._id);
+   await user.save();
+   res.status(200).json({message:"song is unlike successfully!"});
+  }
+   catch(err){
+             console.error(err);
+             res.status(500).json({message:"internal Server Error"});
+            }
+ }
 
-//         user.following.pull(currentUser);
-//         unfollow.follower.pull(_id);
-
-//         await unfollow.save();
-//         await user.save();
-
-//         return res.status(200).json({ message: "user unfollowed the other user" });
-//     } catch (err) {
-//         console.error(err);
-
-//         return res.status(500).json({ message: "Internal server error" });
-//     }
-// };
-
+//  //app name
+ exports.appName=async(req,res)=>{
+  const {appname}=req.body; 
+  const userId=req.params.user_id;
+  try{
+  const user= await User.findById(userId);
+  user.appname=appname;
+  await user.save();
+  res.status(200).json({message:"app name is upadated"})
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({message:"internal Server Error"});
+   }
+  
+ }
+ exports.getappname=(req,res)=>{
+  res.status(200).json({message:"internal Error"});
+ }
+//searching song
 exports.getSearch=async(req,res)=>{
     const {query}=req.params;
     try{
-        const Song=await Song.find({name:{$regex:new RegExp(query,'i')}})
-        res.status(200).json(Song);
+        const song=await Song.find({name:{$regex:new RegExp(query,'i')}})
+        res.status(200).json(song);
     }
     catch(err){
             console.error(err);

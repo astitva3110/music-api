@@ -1,9 +1,7 @@
 const express=require('express');
 const path=require('path');
-const bodyparser=require('body-parser');
-const crypto=require('crypto');
-const session=require('express-session');
 const passport= require('./model/Oauth');
+const cokkieparser=require('cookie-parser');
 require('dotenv').config();
 
 
@@ -11,18 +9,20 @@ const user=require('./routes/user');
 const musik=require('./routes/musik');
 const artistroute=require('./routes/artist');
 const auth=require('./routes/auth');
-const connectdb=require('./util/database')
+const playlist=require('./routes/Playlist');
+const connectdb=require('./util/database');
+const cookieParser = require('cookie-parser');
 const app =express();
 
 
 app.use(express.json());
-
 connectdb();
-
-app.use(artistroute);
 app.use(auth);
-app.use(musik);
+app.use(cookieParser());
+app.use(artistroute);
+// app.use(musik);
 app.use(user);
+app.use(playlist);
 
 
 

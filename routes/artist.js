@@ -1,24 +1,26 @@
 const express = require('express');
-const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
 const fileupload = require('express-fileupload');
 const Artist = require('../model/Artist');
+const artistcontroller=require('../controller/artistcontroller')
+const isArtist=require('../middleware/isArtist')
+const verify=require('../middleware/verify');
 require('dotenv').config();
 
 const router = express.Router();
 
+router.use(fileupload({
+  useTempFiles: true
+}));
 cloudinary.config({
   cloud_name: process.env.cloud_name,
   api_key: process.env.api_key,
   api_secret: process.env.api_secret
 });
 
-router.use(fileupload({
-  useTempFiles: true
-}));
 
-router.post('/upload', async (req, res) => {
+router.post('/upload',[verify,isArtist],async(req,res)=>{
   try {
 const imageFile = req.files.image;
 const imageResult = await cloudinary.uploader.upload(imageFile.tempFilePath);
@@ -40,5 +42,9 @@ const newartist = new Artist({
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+//create a album
+router.post('/createAlbum',[verify,isArtist],artistcontroller.createAlbum);
 
 module.exports = router;

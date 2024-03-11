@@ -1,18 +1,22 @@
 const express=require('express');
 const router=express.Router();
 const usercontroller=require('../controller/usercontroller');
-const auth=require('../middleware/auth');
+const verify=require('../middleware/verify');
 
-router.post('/:user_id',auth,usercontroller.getuser);
+router.get('/:user_id',verify,usercontroller.getuser);
 
-router.put('/update/:user_id',auth,usercontroller.updateUserData)
+router.put('/update/:user_id',verify,usercontroller.updateUserData);
 
-router.post('/createPlaylist/:user_id',auth,usercontroller.createPlaylist);
+router.post('/appName/:user_id',verify,usercontroller.appName);
 
-router.post('/LikedSong/:user_id',auth,usercontroller.LikedSong);
+router.get('/createPlaylist/:user_id',verify,usercontroller.getappname);
 
-router.post('/unLikedSong/:user_id',auth,usercontroller.unLikedSong);
+router.post('/createPlaylist/:user_id',verify,usercontroller.createPlaylist);
 
-router.get('/search/:query',auth,usercontroller.getSearch);
+router.post('/LikedSong/:song_id',verify,usercontroller.LikedSong);
+
+router.post('/unLikedSong/:song_id',verify,usercontroller.unLikedSong);
+
+router.get('/search/:query',verify,usercontroller.getSearch);
 
 module.exports=router;
