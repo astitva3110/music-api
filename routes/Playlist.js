@@ -6,13 +6,13 @@ const verify=require('../middleware/verify');
 
 router.post('/Playlistadd/:playlist_id',verify,playlistcontroller.addSongIntoPlaylist);
 
-router.post('/removeSong/:playlist_id',playlistcontroller.removeSong);
+router.post('/removeSong/:playlist_id',verify,playlistcontroller.removeSong);
 
-router.delete('/deletePlaylist/:playlist_id',playlistcontroller.deletePlaylist);
+router.delete('/deletePlaylist/:playlist_id',verify,playlistcontroller.deletePlaylist);
 
-router.put('/Playlistedit/:playlist_id',playlistcontroller.editPlaylist);
+router.put('/Playlistedit/:playlist_id',verify,playlistcontroller.editPlaylist);
 
 
-router.get('Playlist/:playlist_id',playlistcontroller.getPlaylist);
+router.get('Playlist/:playlist_id',verify,playlistcontroller.getPlaylist);
 
 module.exports=router;

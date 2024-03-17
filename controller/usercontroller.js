@@ -7,6 +7,7 @@ const Artist=require('../model/Artist');
 const connectdb = require('../util/database');
 connectdb();
 
+//get the info of user
 exports.getuser=async(req,res)=>{
     const userId=req.params.user_id;
     try{
@@ -21,6 +22,7 @@ exports.getuser=async(req,res)=>{
     }
 }
 
+//update the user data
 exports.updateUserData=async(req,res)=>{
     const userId=req.params;
     const {update}=req.body;
@@ -38,7 +40,7 @@ exports.updateUserData=async(req,res)=>{
    }
 } 
 
-// //creating a playlist
+ //creating a playlist
 exports.createPlaylist=async(req,res)=>{
  const {text}=req.body; 
  const userId=req.params.user_id;
@@ -63,7 +65,7 @@ exports.createPlaylist=async(req,res)=>{
            }
 }
 
-// //liked song
+//liked  a song
 exports.LikedSong=async(req,res)=>{
   const userId=req.body.user_id; 
   const songId=req.params.song_id;
@@ -87,7 +89,7 @@ exports.LikedSong=async(req,res)=>{
             }
  }
 
-//  //UNliked song
+// UNliked  a song
 exports.unLikedSong=async(req,res)=>{
   const userId=req.body.user_id; 
   const songId=req.params.song_id;
@@ -112,7 +114,7 @@ exports.unLikedSong=async(req,res)=>{
             }
  }
 
-//  //app name
+//app-name for the app
  exports.appName=async(req,res)=>{
   const {appname}=req.body; 
   const userId=req.params.user_id;
@@ -131,6 +133,8 @@ exports.unLikedSong=async(req,res)=>{
  exports.getappname=(req,res)=>{
   res.status(200).json({message:"internal Error"});
  }
+
+
 //searching song
 exports.getSearch=async(req,res)=>{
     const {query}=req.params;
@@ -143,4 +147,25 @@ exports.getSearch=async(req,res)=>{
             res.status(500).json({message:"internal Server Error"});
            }
    
+}
+
+//shuffle Array funtion
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+//shuffle play
+exports.shufflePlay=async(req,res)=>{
+  try {
+    const songs = await Song.find();
+    const shuffle = shuffleArray(songs);
+    res.json({ shuffle });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "internal server error" });
+  }
 }

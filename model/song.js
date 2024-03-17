@@ -5,6 +5,10 @@ const songSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
+    songName:{
+      type:String,
+      required:true
+    },
     album:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Album"
@@ -13,11 +17,7 @@ const songSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Artist",
     }],
-    song:{
-        type:String,
-        required:true,
-    },
-    img:{
+    audioUrl:{
         type:String,
         required:true,
     },

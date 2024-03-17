@@ -4,6 +4,7 @@ const router=express.Router();
 const jwt=require('jsonwebtoken')
 const connectdb=require('../util/database');
 const bcrypt=require('bcrypt');
+const isArtist = require('../middleware/isArtist');
 require('dotenv').config();
 
 connectdb()
@@ -53,6 +54,12 @@ exports.postSignup=async(req,res)=>{
             password:hass
         })
         await newUser.save();
+        if(newUser.isArtist===true){
+            const newArtist=new Artist({
+               name:newUser._id
+            })
+            await newArtist.save();
+        }
         res.status(200).json(newUser);
     }
     catch(err){

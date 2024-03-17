@@ -22,21 +22,18 @@ cloudinary.config({
 
 router.post('/upload',[verify,isArtist],async(req,res)=>{
   try {
-const imageFile = req.files.image;
-const imageResult = await cloudinary.uploader.upload(imageFile.tempFilePath);
     
 const audioFile = req.files.audio;
 const audioResult = await cloudinary.uploader.upload(audioFile.tempFilePath, { resource_type: 'video' });
 
-const newartist = new Artist({
+const newSong= new Song({
   name: req.body.name,
   songName: req.body.songName,
-  imageUrl: imageResult.secure_url,
   audioUrl: audioResult.secure_url,
     });
 
-    await newartist.save();
-    res.redirect("/musik")
+    await newSong.save();
+    res.status(200).json({message:audioUrl})
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -45,6 +42,6 @@ const newartist = new Artist({
 
 
 //create a album
-router.post('/createAlbum',[verify,isArtist],artistcontroller.createAlbum);
+router.post('/createAlbum/:user_id',[verify,isArtist],artistcontroller.createAlbum);
 
 module.exports = router;

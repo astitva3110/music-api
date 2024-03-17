@@ -19,4 +19,6 @@ router.post('/unLikedSong/:song_id',verify,usercontroller.unLikedSong);
 
 router.get('/search/:query',verify,usercontroller.getSearch);
 
+router.get('/shufflePlay',usercontroller.shufflePlay);
+
 module.exports=router;
